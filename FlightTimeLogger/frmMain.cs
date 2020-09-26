@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace FlightTimeLogger
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
         [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
         static extern int GetWindowLong(IntPtr hWnd, int nIndex);
@@ -23,7 +23,7 @@ namespace FlightTimeLogger
         Stopwatch simTimer = new Stopwatch();
         Process sim;
 
-        public Form1()
+        public frmMain()
         {
             InitializeComponent();
         }
@@ -61,7 +61,13 @@ namespace FlightTimeLogger
             label1.Text = $"Time: {simTimer.Elapsed.Hours}h {simTimer.Elapsed.Minutes}m {simTimer.Elapsed.Seconds}s";
             if(sim != null && sim.HasExited)
             {
+                timer1.Enabled = false;
                 simTimer.Stop();
+                var frmSummary = new frmSummary(simTimer.Elapsed);
+                this.Hide();
+                frmSummary.StartPosition = FormStartPosition.CenterScreen;
+                frmSummary.ShowDialog();
+                this.Close();
             }
         }
     }
